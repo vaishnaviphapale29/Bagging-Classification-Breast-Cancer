@@ -1,63 +1,76 @@
+
 import pandas as pd
+from pathlib import Path
+
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.ensemble import BaggingClassifier
-from sklearn.metrics import accuracy_score, classification_report, confusion_matrix
+from sklearn.pipeline import Pipeline
+from sklearn.metrics import (
+    accuracy_score,
+    classification_report,
+    confusion_matrix,
+    ConfusionMatrixDisplay
+)
+import matplotlib.pyplot as plt
 
-#-----------------------------------------------------------------------
-# Step 1 : Load the dataset
-#-----------------------------------------------------------------------
+# Step 1: Load Dataset
+BASE_DIR = Path(__file__).resolve().parent
+DATA_PATH = BASE_DIR / "breast_cancer.csv"
 
-df = pd.read_csv("breast_cancer.csv")
-print("Shapae of dataset : ",df.shape)
-print("First 5 records : ",df.head())
+df = pd.read_csv(DATA_PATH)
 
-#-----------------------------------------------------------------------
-# Step 2 : Separate feature and labels
-#-----------------------------------------------------------------------
+print("Shape of dataset:", df.shape)
+print("\nFirst 5 records:")
+print(df.head())
 
+# Step 2: Separate Features and Target
 X = df.drop("target", axis=1)
 Y = df["target"]
 
-#----------------------------------------------------------------------
-# Step 3 : Split dataset for training and testing
-#-----------------------------------------------------------------------
-
-X_train, X_test, Y_train, Y_test = train_test_split(X,Y,test_size=0.2, random_state=42)
-
-#----------------------------------------------------------------------
-# Step 4 : Create base model
-#-----------------------------------------------------------------------
-
-base_model = DecisionTreeClassifier(random_state=42)
-
-#----------------------------------------------------------------------
-# Step 5 : Create bagging model
-#-----------------------------------------------------------------------
-
-bagging_model = BaggingClassifier(
-    estimator=base_model,
-    n_estimators=10,
-    random_state=42
+# Step 3: Split Dataset
+X_train, X_test, Y_train, Y_test = train_test_split(
+    X,
+    Y,
+    test_size=0.2,
+    random_state=42,
+    stratify=Y
 )
 
-#----------------------------------------------------------------------
-# Step 6 : Train bagging model
-#-----------------------------------------------------------------------
+# Step 4: Create Pipeline
+model = Pipeline([
+    ("bagging", BaggingClassifier(
+        estimator=DecisionTreeClassifier(random_state=42),
+        n_estimators=10,
+        random_state=42
+    ))
+])
 
-bagging_model.fit(X_train,Y_train)
+# Step 5: Train Model
+model.fit(X_train, Y_train)
 
-#----------------------------------------------------------------------
-# Step 7 : Test bagging model
-#-----------------------------------------------------------------------
+# Step 6: Make Predictions
+Y_pred = model.predict(X_test)
 
-Y_pred = bagging_model.predict(X_test)
+# Step 7: Evaluate Model
+accuracy = accuracy_score(Y_test, Y_pred)
 
-#----------------------------------------------------------------------
-# Step 8 : Evalute bagging model
-#-----------------------------------------------------------------------
+print("\nBagging Model Accuracy:", round(accuracy * 100, 2), "%")
 
-print("Bagging Accuracy : ",accuracy_score(Y_test,Y_pred))
+print("\nClassification Report:")
+print(classification_report(Y_test, Y_pred))
 
-print("Confusion matrix : ")
-print(confusion_matrix(Y_test,Y_pred))
+print("\nConfusion Matrix:")
+cm = confusion_matrix(Y_test, Y_pred)
+print(cm)
+
+# Step 8: Visualize Confusion Matrix
+disp = ConfusionMatrixDisplay(
+    confusion_matrix=cm
+)
+disp.plot(cmap="Blues")
+
+plt.title("Breast Cancer - Bagging Classifier")
+plt.tight_layout()
+plt.savefig(BASE_DIR / "confusion_matrix.png")
+plt.show()

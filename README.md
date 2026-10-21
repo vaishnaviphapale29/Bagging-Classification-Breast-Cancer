@@ -1,119 +1,101 @@
 # Breast Cancer Classification using Bagging
 
 ## Project Overview
+This project uses a **Bagging Classifier with Decision Trees** to classify breast cancer data. The model is implemented using Scikit-learn and a Machine Learning Pipeline.
 
-This project uses Machine Learning to classify breast cancer cases using a Bagging Classifier with a Decision Tree as the base estimator.
+The goal is to predict the target class based on features extracted from breast cancer diagnostic data.
 
-Bagging (Bootstrap Aggregating) is an ensemble learning technique that combines multiple models to improve prediction stability and reduce overfitting. The model is trained and evaluated using the Breast Cancer dataset.
-
-## Technologies Used
-
-- Python
-- Pandas
-- Scikit-learn
-
-## Machine Learning Algorithms
-
-- Decision Tree Classifier
-- Bagging Classifier (Ensemble Learning)
-
-## Dataset Information
-
-The project uses `breast_cancer.csv`, which contains breast cancer measurements and a target column.
-
+## Dataset
+- **Dataset:** `breast_cancer.csv`
 - **Total Records:** 569
 - **Total Columns:** 31
 - **Input Features:** 30
 - **Target Column:** `target`
 
-The dataset is divided into training and testing sets using an 80:20 ratio.
+## Technologies Used
+- Python
+- Pandas
+- Scikit-learn
+- Matplotlib
+- Machine Learning Pipeline
+- Bagging Classifier
+- Decision Tree Classifier
 
 ## Project Workflow
-
 1. Load the dataset using Pandas.
-2. Display the dataset shape and first five records.
-3. Separate input features and target labels.
-4. Split the dataset into training and testing sets.
-5. Create a Decision Tree Classifier as the base model.
-6. Build a Bagging Classifier with 10 estimators.
-7. Train the model using the training dataset.
-8. Predict the target labels for the test dataset.
-9. Evaluate the model using accuracy and a confusion matrix.
+2. Separate input features and target labels.
+3. Split the dataset into training and testing sets.
+4. Create a Pipeline with a Bagging Classifier.
+5. Train the model using Decision Trees.
+6. Predict target values for the test dataset.
+7. Evaluate the model using accuracy, classification report, and confusion matrix.
+8. Visualize and save the confusion matrix.
 
-## Model Configuration
-
+## Model Details
+- **Algorithm:** Bagging Classifier
 - **Base Estimator:** Decision Tree Classifier
-- **Ensemble Method:** Bagging
 - **Number of Estimators:** 10
 - **Test Size:** 20%
 - **Random State:** 42
+- **Stratified Train-Test Split:** Yes
 
-## Model Results
+## Results
 
-The Bagging Classifier achieved an accuracy of **95.61%** on the test dataset.
+The model achieved an accuracy of **92.98%** on the test dataset.
 
-| Evaluation Metric | Result |
-|---|---:|
-| Dataset Records | 569 |
-| Dataset Columns | 31 |
-| Test Samples | 114 |
-| Correct Predictions | 109 |
-| Incorrect Predictions | 5 |
-| Model Accuracy | 95.61% |
+| Metric | Class 0 | Class 1 |
+|---|---:|---:|
+| Precision | 0.90 | 0.94 |
+| Recall | 0.90 | 0.94 |
+| F1-Score | 0.90 | 0.94 |
+| Support | 42 | 72 |
+
+- **Accuracy:** 92.98%
+- **Test Samples:** 114
+- **Correct Predictions:** 106
+- **Incorrect Predictions:** 8
 
 ### Confusion Matrix
 
 ```text
-[[40  3]
- [ 2 69]]
+[[38  4]
+ [ 4 68]]
 ```
 
-The confusion matrix represents:
+The confusion matrix shows:
+- 38 Class 0 samples were correctly classified.
+- 4 Class 0 samples were incorrectly classified as Class 1.
+- 4 Class 1 samples were incorrectly classified as Class 0.
+- 68 Class 1 samples were correctly classified.
 
-- **True Negatives (TN):** 40
-- **False Positives (FP):** 3
-- **False Negatives (FN):** 2
-- **True Positives (TP):** 69
+### Confusion Matrix Visualization
 
-The model correctly classified 109 out of 114 test samples.
+The program saves the confusion matrix plot as `confusion_matrix.png`.
 
-## How to Run the Project
+![Confusion Matrix](confusion_matrix.png)
 
-### 1. Install Python
+## Installation
 
-Install Python if it is not already available on your system.
-
-### 2. Install Dependencies
-
-Run the following command in your terminal:
+Install the required Python libraries:
 
 ```bash
-pip install -r requirements.txt
+pip install pandas scikit-learn matplotlib
 ```
 
-### 3. Prepare the Dataset
+## How to Run
 
-Keep `breast_cancer.csv` in the project directory so the Python script can load it.
+Keep the dataset and Python script in the same project folder.
 
-### 4. Run the Python Script
+Run the following command:
 
 ```bash
 python BaggingClassificationBreastCancer.py
 ```
 
-The script displays the dataset shape, first five records, model accuracy, and confusion matrix.
+## Conclusion
 
-## Key Learning Outcomes
+The Bagging Classifier achieved **92.98% accuracy** on the test dataset. The model combines predictions from multiple Decision Trees to improve classification performance.
 
-- Understanding ensemble learning techniques.
-- Implementing a Decision Tree Classifier.
-- Applying Bagging to a classification problem.
-- Splitting data into training and testing sets.
-- Evaluating a classification model using accuracy and a confusion matrix.
+This project demonstrates ensemble learning, machine learning pipelines, model evaluation, and data visualization using Python.
 
-## Future Improvements
-
-- Compare Bagging with Random Forest and other ensemble algorithms.
-- Evaluate precision, recall, and F1-score.
-- Use cross-validation for more reliable performance evaluation.
-- Tune model hyperparameters to improve generalization.
+**Note:** This project is for educational purposes and is not intended for clinical diagnosis or medical decision-making.
